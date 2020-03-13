@@ -1,17 +1,18 @@
-import org.apache.commons.io.IOUtils;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 public class Keys {
     private static String TELEGRAM_KEY;
     private static String OPENWEATHER_KEY;
     public static void getKeys() {
+        String file = "keys.properties";
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        try(InputStream is = classloader.getResourceAsStream("keys.txt")) {
-            String contents = IOUtils.toString(is, StandardCharsets.UTF_8);
-            String[] keys = contents.split("\\r?\\n");
-            TELEGRAM_KEY = keys[0];
-            OPENWEATHER_KEY = keys[1];
+        try{
+            Properties keys = new Properties();
+            if(classloader.getResourceAsStream(file) != null)
+                keys.load(classloader.getResourceAsStream(file));
+            TELEGRAM_KEY = keys.getProperty("TELEGRAM_KEY");
+            OPENWEATHER_KEY = keys.getProperty("OPENWEATHER_KEY");
         }
         catch (IOException e){e.printStackTrace();}
     }

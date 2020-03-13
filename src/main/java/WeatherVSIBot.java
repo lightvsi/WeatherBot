@@ -25,16 +25,16 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
             }
         }
     }
-        private void sendMessage(String text,long chatId){
-            SendMessage msg = new SendMessage();
-            msg.setChatId(chatId);
-            msg.setText(text);
-            try {
-                execute(msg);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+    private void sendMessage(String text,long chatId){
+        SendMessage msg = new SendMessage();
+        msg.setChatId(chatId);
+        msg.setText(text);
+        try {
+            execute(msg);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
+    }
 
     @Override
     public String getBotUsername() {
