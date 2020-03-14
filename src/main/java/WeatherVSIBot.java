@@ -13,7 +13,9 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
             System.out.println(message_text);
             if (message_text.contains("/help") || message_text.contains("/start")) {
                 sendMessage("Enter a name of a city (such as London, Moscow, etc)",chatId);
-                return;
+                boolean added = Users.addUser(chatId);
+                System.out.println("User added: " + added);
+                Users.printUsers();
             }
             else{
                 try {
