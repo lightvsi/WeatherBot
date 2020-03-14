@@ -6,6 +6,11 @@ public class Users {
         return users.add(new User(chatId));
     }
     public static void printUsers(){
-        users.forEach(x -> System.out.println(x.toString()));
+        if (!users.isEmpty()) {
+            users.forEach(x -> System.out.println(x.toString()));
+        }
+        else {
+            System.out.println("there are no users");
+        }
     }
 }
