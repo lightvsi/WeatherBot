@@ -12,6 +12,6 @@ public class User {
 
     @Override
     public int hashCode(){
-        return 7 * (int) id + 5 * city.hashCode();
+        return Long.hashCode(id);
     }
 }

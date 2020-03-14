@@ -8,22 +8,21 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String message_text = update.getMessage().getText();
+            String message = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
-            System.out.println(message_text);
-            if (message_text.contains("/help") || message_text.contains("/start")) {
+            System.out.println(message);
+            if (message.contains("/help") || message.contains("/start")) {
                 sendMessage("Enter a name of a city (such as London, Moscow, etc)",chatId);
-                boolean added = Users.addUser(chatId);
-                System.out.println("User added: " + added);
-                Users.printUsers();
+                UserRepository.addUser(chatId);
+                UserRepository.printUsers();
             }
             else{
                 try {
                     //sendMessage("requestProcessed:", chatId);
-                    Weather weather = Parser.parse(Request.getData(message_text));
+                    Weather weather = Parser.parse(Request.getData(message));
                     sendMessage(weather != null ? weather.toString() : "City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
                 }
-                catch (IOException e) {e.printStackTrace();}
+                catch (IOException e) {throw new RuntimeException(e);}
             }
         }
     }
@@ -34,7 +33,7 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
         try {
             execute(msg);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

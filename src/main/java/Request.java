@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Request {
+    private static final HttpClient client = HttpClients.createDefault();
     public static String getData(String city) throws IOException {
-        HttpClient client = HttpClients.createDefault();
         String requestContent = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + Keys.getOpenweatherKey();
         HttpGet request = new HttpGet(requestContent);
         HttpResponse response = client.execute(request);
