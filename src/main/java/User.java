@@ -1,9 +1,14 @@
+import javax.persistence.*;
 import java.io.Serializable;
 
-
+@Entity
+@Table(name = "user")
 public class User implements Serializable {
-
+    @Id
+    @Column(name="id")
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name="city")
     private String city = "moscow";
 
     public User(){ }
@@ -41,5 +46,17 @@ public class User implements Serializable {
     @Override
     public int hashCode(){
         return Long.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
+        User user = (User) o;
+        return this.getId() == user.getId(); //&& this.getCity().equals(user.getCity());
     }
 }

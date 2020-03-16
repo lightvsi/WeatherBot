@@ -1,5 +1,10 @@
 import junit.framework.TestCase;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HibernateTest extends TestCase {
 
@@ -7,9 +12,15 @@ public class HibernateTest extends TestCase {
         System.out.println("Maven + Hibernate + MySQL");
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        User user = new User(2058L, "london");
-        session.saveOrUpdate(user);
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User(2058L, "moscow"));
+        users.add(new User(3082L, "london"));
+        users.forEach(x ->  session.saveOrUpdate(x));
+        System.out.println(session.contains(new User(3082L)));
+        //List list = session.createQuery("FROM User where id = 2058L").list();
+        //list.forEach(System.out::println);
+        System.out.println(session.load(User.class, 2058L).getCity());
         session.getTransaction().commit();
-        session.disconnect();
+        session.close();
     }
 }
