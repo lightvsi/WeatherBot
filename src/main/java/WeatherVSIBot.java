@@ -3,6 +3,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class WeatherVSIBot extends TelegramLongPollingBot {
     @Override
@@ -21,22 +22,23 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
                     sendMessage(weather != null ? weather.toString() : "City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
                 }
                 catch (IOException e) {throw new RuntimeException(e);}
+                catch(URISyntaxException e) {throw new RuntimeException(e);}
             }
-            else{
+            else {
                 try {
-                    //sendMessage("requestProcessed:", chatId);
-
                     Weather weather = Parser.parse(Request.getData(message));
-                    if(weather != null) {
-                        DatabaseOperations.addorUpdate(chatId,message);
+                    if (weather != null) {
+                        DatabaseOperations.addorUpdate(chatId, message);
                         sendMessage(weather.toString(), chatId);
-                    }
-                    else
-                    {
+                    } else {
                         sendMessage("City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
                     }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                catch (IOException e) {throw new RuntimeException(e);}
+                catch(URISyntaxException e){
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
