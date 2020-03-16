@@ -13,14 +13,28 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
             System.out.println(message);
             if (message.contains("/help") || message.contains("/start")) {
                 sendMessage("Enter a name of a city (such as London, Moscow, etc)",chatId);
-                UserRepository.addUser(chatId);
-                UserRepository.printUsers();
+            }
+            else if(message.contains("/get"))
+            {
+                try {
+                    Weather weather = Parser.parse(Request.getData(DatabaseOperations.city(chatId)));
+                    sendMessage(weather != null ? weather.toString() : "City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
+                }
+                catch (IOException e) {throw new RuntimeException(e);}
             }
             else{
                 try {
                     //sendMessage("requestProcessed:", chatId);
+
                     Weather weather = Parser.parse(Request.getData(message));
-                    sendMessage(weather != null ? weather.toString() : "City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
+                    if(weather != null) {
+                        DatabaseOperations.addorUpdate(chatId,message);
+                        sendMessage(weather.toString(), chatId);
+                    }
+                    else
+                    {
+                        sendMessage("City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
+                    }
                 }
                 catch (IOException e) {throw new RuntimeException(e);}
             }
