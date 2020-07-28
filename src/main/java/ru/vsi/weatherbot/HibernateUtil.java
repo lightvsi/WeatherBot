@@ -4,6 +4,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
 //import org.hibernate.service.ServiceRegistryBuilder;
 @Component
 public class HibernateUtil {
@@ -20,7 +22,7 @@ public class HibernateUtil {
         }
     }
 
-   public SessionFactory getSessionFactory() {
+    public SessionFactory getSessionFactory() {
        return sessionFactory;
     }
 
