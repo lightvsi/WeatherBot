@@ -27,6 +27,6 @@ hs_err_pid*
 
 #other
 keys.properties
+hibernate.cfg.xml
 target/
 .idea/
-resources/

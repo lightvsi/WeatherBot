@@ -1,14 +1,19 @@
-import javax.persistence.*;
+package ru.vsi.weatherbot;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name="city")
+    @Column(name = "city")
     private String city = "moscow";
 
     public User(){ }

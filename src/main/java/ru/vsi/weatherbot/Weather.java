@@ -1,3 +1,5 @@
+package ru.vsi.weatherbot;
+
 public class Weather {
     private int temp;
     private String description;

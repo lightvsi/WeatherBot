@@ -1,3 +1,5 @@
+package ru.vsi.weatherbot;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,10 +1,16 @@
-import com.google.gson.Gson;
+package ru.vsi.weatherbot;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Parser {
-    private static final JsonParser parser = new JsonParser();
-    public static Weather parse(String input){
+    private final JsonParser parser;
+    public Parser(){
+        this.parser = new JsonParser();
+    }
+    public Weather parse(String input){
         JsonObject obj = parser.parse(input).getAsJsonObject();
         if(obj.get("cod").getAsInt() == 200) {
             double temp = obj.get("main").getAsJsonObject().get("temp").getAsDouble();
