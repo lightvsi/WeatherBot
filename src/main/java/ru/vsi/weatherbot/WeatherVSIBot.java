@@ -6,6 +6,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -16,9 +17,7 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
     @Autowired
     private Keys keys;
     @Autowired
-    private Parser parser;
-    @Autowired
-    private Request request;
+    private WeatherHttpClient weatherHttpClient;
     @Autowired
     private UserRepository userRepository;
 
@@ -30,36 +29,29 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
             System.out.println(message);
 
             if (message.contains("/help") || message.contains("/start")) {
-                sendMessage(ENTERNAME,chatId);
-            }
-            else if(message.contains("/get"))
-            {
+                sendMessage(ENTERNAME, chatId);
+            } else if (message.contains("/get")) {
                 try {
-                    Weather weather = parser.parse(request.getData(userRepository.findById(chatId).getCity()));
-                    sendMessage(weather != null ? weather.toString() : NOTFOUND, chatId);
-                }
-                catch (IOException e) {throw new RuntimeException(e);}
-                catch(URISyntaxException e) {throw new RuntimeException(e);}
-            }
-            else {
-                try {
-                    Weather weather = parser.parse(request.getData(message));
-                    if (weather != null) {
-                        userRepository.save(new User(chatId, message));
-                        sendMessage(weather.toString(), chatId);
-                    } else {
-                        sendMessage(NOTFOUND, chatId);
-                    }
-                } catch (IOException e) {
+                    Weather weather = weatherHttpClient.weather(userRepository.findById(chatId).getCity());
+                    sendMessage(weather.toString(), chatId);
+                } catch (URISyntaxException | IOException e) {
+                    sendMessage(NOTFOUND, chatId);
                     throw new RuntimeException(e);
                 }
-                catch(URISyntaxException e){
+            } else {
+                try {
+                    Weather weather = weatherHttpClient.weather(message);
+                    userRepository.save(new User(chatId, message));
+                    sendMessage(weather.toString(), chatId);
+                } catch (URISyntaxException | IOException e) {
+                    sendMessage(NOTFOUND, chatId);
                     throw new RuntimeException(e);
                 }
             }
         }
     }
-    private void sendMessage(String text,long chatId){
+
+    private void sendMessage(String text, long chatId) {
         SendMessage msg = new SendMessage();
         msg.setChatId(chatId);
         msg.setText(text);
@@ -77,6 +69,6 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-                return this.keys.getTelegramKey();
+        return this.keys.getTelegramKey();
     }
 }

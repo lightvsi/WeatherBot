@@ -27,6 +27,8 @@ hs_err_pid*
 
 #other
 keys.properties
+application.properties
 hibernate.cfg.xml
+*.properties
 target/
 .idea/
