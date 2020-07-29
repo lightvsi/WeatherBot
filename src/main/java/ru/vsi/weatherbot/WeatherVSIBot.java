@@ -1,31 +1,26 @@
 package ru.vsi.weatherbot;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-@Component
+@Service
 public class WeatherVSIBot extends TelegramLongPollingBot {
-    private Keys keys;
-    private Parser parser;
-    private Request request;
-    private DatabaseOperations databaseOperations;
-
+    private final String NOTFOUND = "City is not found. Enter correct name (such as London, Moscow, etc)";
+    private final String ENTERNAME = "Enter a name of a city (such as London, Moscow, etc)";
     @Autowired
-    public WeatherVSIBot(Keys keys, Parser parser, Request request, DatabaseOperations databaseOperations){
-        this.keys = keys;
-        this.parser = parser;
-        this.request = request;
-        this.databaseOperations = databaseOperations;
-        if(this.keys != null && this.parser != null && this.request != null && this.databaseOperations != null)
-            System.out.println("dependency injection successful");
-    }
+    private Keys keys;
+    @Autowired
+    private Parser parser;
+    @Autowired
+    private Request request;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -35,13 +30,13 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
             System.out.println(message);
 
             if (message.contains("/help") || message.contains("/start")) {
-                sendMessage("Enter a name of a city (such as London, Moscow, etc)",chatId);
+                sendMessage(ENTERNAME,chatId);
             }
             else if(message.contains("/get"))
             {
                 try {
-                    Weather weather = parser.parse(request.getData(databaseOperations.city(chatId)));
-                    sendMessage(weather != null ? weather.toString() : "City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
+                    Weather weather = parser.parse(request.getData(userRepository.findById(chatId).getCity()));
+                    sendMessage(weather != null ? weather.toString() : NOTFOUND, chatId);
                 }
                 catch (IOException e) {throw new RuntimeException(e);}
                 catch(URISyntaxException e) {throw new RuntimeException(e);}
@@ -50,10 +45,10 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
                 try {
                     Weather weather = parser.parse(request.getData(message));
                     if (weather != null) {
-                        databaseOperations.addorUpdate(chatId, message);
+                        userRepository.save(new User(chatId, message));
                         sendMessage(weather.toString(), chatId);
                     } else {
-                        sendMessage("City is not found. Enter correct name (such as London, Moscow, etc)", chatId);
+                        sendMessage(NOTFOUND, chatId);
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);

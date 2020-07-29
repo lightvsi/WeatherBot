@@ -9,13 +9,14 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+
 @Component
 public class Request {
     private final HttpClient client;
+    private final String CONST = "http://api.openweathermap.org/data/2.5/weather";
     private Keys keys;
     private URIBuilder builder;
     private HttpGet request;
@@ -24,7 +25,7 @@ public class Request {
         System.out.println("trying to get key");
         client = HttpClients.createDefault();
         this.keys = keys;
-        builder = new URIBuilder("http://api.openweathermap.org/data/2.5/weather");
+        builder = new URIBuilder(CONST);
     }
 
     public String getData(String city) throws IOException, URISyntaxException {
