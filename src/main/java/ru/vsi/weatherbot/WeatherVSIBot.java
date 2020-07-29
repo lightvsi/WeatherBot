@@ -12,8 +12,9 @@ import java.net.URISyntaxException;
 
 @Service
 public class WeatherVSIBot extends TelegramLongPollingBot {
+    private final String ENTERCITY = "Enter a name of a city (such as London, Moscow, etc)";
+    private final String USEGET = "Use /get command to get weather for a city you chose";
     private final String NOTFOUND = "City is not found. Enter correct name (such as London, Moscow, etc)";
-    private final String ENTERNAME = "Enter a name of a city (such as London, Moscow, etc)";
     @Autowired
     private Keys keys;
     @Autowired
@@ -24,29 +25,35 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String message = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
+            String message = update.getMessage().getText();
             System.out.println(message);
-
-            if (message.contains("/help") || message.contains("/start")) {
-                sendMessage(ENTERNAME, chatId);
-            } else if (message.contains("/get")) {
-                try {
-                    Weather weather = weatherHttpClient.weather(userRepository.findById(chatId).getCity());
-                    sendMessage(weather.toString(), chatId);
-                } catch (URISyntaxException | IOException e) {
-                    sendMessage(NOTFOUND, chatId);
-                    throw new RuntimeException(e);
-                }
-            } else {
-                try {
-                    Weather weather = weatherHttpClient.weather(message);
-                    userRepository.save(new User(chatId, message));
-                    sendMessage(weather.toString(), chatId);
-                } catch (URISyntaxException | IOException e) {
-                    sendMessage(NOTFOUND, chatId);
-                    throw new RuntimeException(e);
-                }
+            switch (message) {
+                case "/start":
+                    sendMessage(ENTERCITY, chatId);
+                    break;
+                case "/help":
+                    sendMessage(USEGET + "\nOR\n" + ENTERCITY , chatId);
+                    break;
+                case "/get":
+                    try {
+                        Weather weather = weatherHttpClient.weather(userRepository.findById(chatId).getCity());
+                        sendMessage(weather.toString(), chatId);
+                    } catch (URISyntaxException | IOException e) {
+                        sendMessage(NOTFOUND, chatId);
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                default:
+                    try {
+                        Weather weather = weatherHttpClient.weather(message);
+                        userRepository.save(new User(chatId, message));
+                        sendMessage(weather.toString(), chatId);
+                    } catch (URISyntaxException | IOException e) {
+                        sendMessage(NOTFOUND, chatId);
+                        throw new RuntimeException(e);
+                    }
+                    break;
             }
         }
     }
