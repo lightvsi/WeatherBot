@@ -9,14 +9,11 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.springframework.stereotype.Service;
 
 @Service
 public class WeatherHttpClient {

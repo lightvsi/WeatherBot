@@ -33,7 +33,7 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
                     sendMessage(ENTERCITY, chatId);
                     break;
                 case "/help":
-                    sendMessage(USEGET + "\nOR\n" + ENTERCITY , chatId);
+                    sendMessage(USEGET + "\nOR\n" + ENTERCITY, chatId);
                     break;
                 case "/get":
                     try {

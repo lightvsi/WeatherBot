@@ -6,12 +6,11 @@ import java.util.Properties;
 
 @Service
 public class  Keys {
-    private final String FILE;
+    private final String FILE ="keys.properties";
     private final String ADDRESS;
     private final String TELEGRAM_KEY;
     private final String OPENWEATHER_KEY;
     public Keys() {
-        FILE = "keys.properties";
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         try{
             Properties keys = new Properties();
