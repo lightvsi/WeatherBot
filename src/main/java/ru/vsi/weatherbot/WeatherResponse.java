@@ -23,9 +23,9 @@ public class WeatherResponse {
 
     @Override
     public String toString() {
-        StringBuilder discription = new StringBuilder();
-        list.forEach(x -> discription.append(x.getMain()));
-        return "Temperature: " + temperature.toString() + " \u00B0C\nDescription: " + discription.toString();
+        StringBuilder description = new StringBuilder();
+        list.forEach(x -> description.append(x.toString()));
+        return "Temperature: " + temperature.toString() + " \u00B0C\nDescription: " + description.toString();
     }
 }
 
