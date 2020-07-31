@@ -1,4 +1,5 @@
 package ru.vsi.weatherbot;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,13 +16,14 @@ public class User implements Serializable {
     @Column(name = "city")
     private String city = "moscow";
 
-    public User(){ }
+    public User() {
+    }
 
-    public User(Long id){
+    public User(Long id) {
         this.id = id;
     }
 
-    public User(Long id, String city){
+    public User(Long id, String city) {
         this.id = id;
         this.city = city;
     }
@@ -43,17 +45,17 @@ public class User implements Serializable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return getClass().getName() + "[ id = " + id + ", city = " + city + " ]";
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Long.hashCode(id);
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null)

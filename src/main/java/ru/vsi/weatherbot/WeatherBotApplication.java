@@ -10,9 +10,9 @@ import org.telegram.telegrambots.ApiContextInitializer;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaRepositories
-public class Main {
+public class WeatherBotApplication {
     public static void main(String[] args) throws Exception {
         ApiContextInitializer.init();
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(WeatherBotApplication.class, args);
     }
 }

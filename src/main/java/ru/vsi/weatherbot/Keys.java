@@ -5,24 +5,26 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Service
-public class  Keys {
-    private final String FILE ="keys.properties";
+public class Keys {
+    private final String FILE = "keys.properties";
     private final String ADDRESS;
     private final String TELEGRAM_KEY;
     private final String OPENWEATHER_KEY;
+
     public Keys() {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        try{
+        try {
             Properties keys = new Properties();
-            if(classloader.getResourceAsStream(FILE) != null)
+            if (classloader.getResourceAsStream(FILE) != null)
                 keys.load(classloader.getResourceAsStream(FILE));
             ADDRESS = keys.getProperty("ADDRESS");
             TELEGRAM_KEY = keys.getProperty("TELEGRAM_KEY");
             OPENWEATHER_KEY = keys.getProperty("OPENWEATHER_KEY");
-            System.out.println("keys created");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        catch (IOException e){throw new RuntimeException(e);}
     }
+
     public String getADDRESS() {
         return ADDRESS;
     }

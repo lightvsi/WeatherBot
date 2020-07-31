@@ -6,7 +6,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -37,8 +36,8 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
                     break;
                 case "/get":
                     try {
-                        Weather weather = weatherHttpClient.weather(userRepository.findById(chatId).getCity());
-                        sendMessage(weather.toString(), chatId);
+                        WeatherResponse weatherResponse = weatherHttpClient.weather(userRepository.findById(chatId).getCity());
+                        sendMessage(weatherResponse.toString(), chatId);
                     } catch (URISyntaxException | IOException e) {
                         sendMessage(NOTFOUND, chatId);
                         throw new RuntimeException(e);
@@ -46,9 +45,9 @@ public class WeatherVSIBot extends TelegramLongPollingBot {
                     break;
                 default:
                     try {
-                        Weather weather = weatherHttpClient.weather(message);
+                        WeatherResponse weatherResponse = weatherHttpClient.weather(message);
                         userRepository.save(new User(chatId, message));
-                        sendMessage(weather.toString(), chatId);
+                        sendMessage(weatherResponse.toString(), chatId);
                     } catch (URISyntaxException | IOException e) {
                         sendMessage(NOTFOUND, chatId);
                         throw new RuntimeException(e);
