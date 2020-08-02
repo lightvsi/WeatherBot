@@ -1,2 +1,6 @@
 # WeatherBot
-A bot that provides current weatherns for a city you chose. It also stores your latest choice in database. To quickly get weatherns for the last city you've chosen use "/get" command.
+Бот, возвращающий погодные условия для выбранного пользователем города.
+Данные берутся из Openweather Api в формате JSON. Десериализуются в объект WeatherResponse производится с помощью Jackson Framework.
+Выбранный пользователем город хранится в базе данных.
+Работа с базой данных осуществляется с помощью Spring Data JPA и Hibernate.
+Dependency injection происходит с помощью средств Spring Core.
